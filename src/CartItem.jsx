@@ -12,45 +12,28 @@ const CartItem = ({ onContinueShopping }) => {
   const calculateTotalAmount = () => {
     let total = 0;
     cart.forEach(item => {
-        const itemCost = parseFloat(item.cost.replace('$', ''));
-        total += item.quantity * itemCost;
+      const itemCost = parseFloat(item.cost.replace('$', ''));
+      total += item.quantity * itemCost;
     });
     return total.toFixed(2);
   };
 
-  const handleContinueShopping = (e) => {
-    if (onContinueShopping) {
-        onContinueShopping(); // Calls the function passed as a prop
-    }
-};
-
-   const handleCheckoutShopping = (e) => {
-        alert('Functionality to be added for future reference');
-    };
-
-
   const handleIncrement = (item) => {
     const updatedQuantity = item.quantity + 1;
-    dispatch(updateQuantity({ name: item.name, quantity: updatedQuantity }));
+    dispatch(updateQuantity({ name: item.name, quantity: updatedQuantity })); // Dispatch updateQuantity action
   };
 
   const handleDecrement = (item) => {
-   if (item.quantity > 1) {
-        const updatedQuantity = item.quantity - 1;
-        dispatch(updateQuantity({ name: item.name, quantity: updatedQuantity }));
+    if (item.quantity > 1) {
+      const updatedQuantity = item.quantity - 1;
+      dispatch(updateQuantity({ name: item.name, quantity: updatedQuantity })); // Dispatch updateQuantity action
     } else {
-        dispatch(removeItem(item.name));
+      dispatch(removeItem(item.name)); // Dispatch removeItem action if quantity reaches 0
     }
   };
 
   const handleRemove = (item) => {
-    dispatch(removeItem(item.name));
-  };
-
-  // Calculate total cost based on quantity for an item
-  const calculateTotalCost = (item) => {
-    const itemCost = parseFloat(item.cost.replace('$', ''));
-    return (item.quantity * itemCost).toFixed(2);
+    dispatch(removeItem(item.name)); // Dispatch removeItem action to remove item from the cart
   };
 
   return (
@@ -74,22 +57,19 @@ const CartItem = ({ onContinueShopping }) => {
                 <span className="cart-item-quantity-value">{item.quantity}</span>
                 <button className="cart-item-button cart-item-button-inc" onClick={() => handleIncrement(item)}>+</button>
               </div>
-              <div className="cart-item-total">Total: ${calculateTotalCost(item)}</div>
+              <div className="cart-item-total">Total: ${calculateTotalAmount(item)}</div>
               <button className="cart-item-delete" onClick={() => handleRemove(item)}>Delete</button>
             </div>
           </div>
         ))}
       </div>
-      <div style={{ marginTop: '20px', color: 'black' }} className='total_cart_amount'></div>
       <div className="continue_shopping_btn">
-        <button className="get-started-button" onClick={(e) => handleContinueShopping(e)}>Continue Shopping</button>
+        <button className="get-started-button" onClick={(e) => onContinueShopping(e)}>Continue Shopping</button>
         <br />
-        <button className="get-started-button1">Checkout</button>
+        <button className="get-started-button1" onClick={() => alert('Functionality to be added')}>Checkout</button>
       </div>
     </div>
   );
 };
 
 export default CartItem;
-
-
