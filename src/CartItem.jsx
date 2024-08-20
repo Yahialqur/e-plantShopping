@@ -5,36 +5,63 @@ import './CartItem.css';
 
 const CartItem = ({ onContinueShopping }) => {
   const cart = useSelector(state => state.cart.items);
+  const totalQuantity = useSelector(state => state.cart.totalQuantity);
   const dispatch = useDispatch();
 
   // Calculate total amount for all products in the cart
   const calculateTotalAmount = () => {
- 
+    let total = 0;
+    cart.forEach(item => {
+        const itemCost = parseFloat(item.cost.replace('$', ''));
+        total += item.quantity * itemCost;
+    });
+    return total.toFixed(2);
   };
 
   const handleContinueShopping = (e) => {
-   
-  };
+    if (onContinueShopping) {
+        onContinueShopping(); // Calls the function passed as a prop
+    }
+};
 
+   const handleCheckoutShopping = (e) => {
+        alert('Functionality to be added for future reference');
+    };
 
 
   const handleIncrement = (item) => {
+    const updatedQuantity = item.quantity + 1;
+    dispatch(updateQuantity({ name: item.name, quantity: updatedQuantity }));
   };
 
   const handleDecrement = (item) => {
-   
+   if (item.quantity > 1) {
+        const updatedQuantity = item.quantity - 1;
+        dispatch(updateQuantity({ name: item.name, quantity: updatedQuantity }));
+    } else {
+        dispatch(removeItem(item.name));
+    }
   };
 
   const handleRemove = (item) => {
+    dispatch(removeItem(item.name));
   };
 
   // Calculate total cost based on quantity for an item
   const calculateTotalCost = (item) => {
+    const itemCost = parseFloat(item.cost.replace('$', ''));
+    return (item.quantity * itemCost).toFixed(2);
   };
 
   return (
     <div className="cart-container">
-      <h2 style={{ color: 'black' }}>Total Cart Amount: ${calculateTotalAmount()}</h2>
+      <div className="cart-header">
+        <h2 style={{ color: 'black' }}>Total Cart Amount: ${calculateTotalAmount()}</h2>
+        <div className="cart-icon">
+          <i className="shopping-cart-icon"></i>
+          <span className="cart-count">{totalQuantity}</span> {/* Display totalQuantity */}
+        </div>
+      </div>
       <div>
         {cart.map(item => (
           <div className="cart-item" key={item.name}>
